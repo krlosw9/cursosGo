@@ -2,6 +2,14 @@ package main
 
 import "fmt"
 
+func printString(param1, param2 int, param3 string) {
+	fmt.Println(param1, param2, param3)
+}
+
+func doubleReturn(a int) (c, d int) {
+	return a, a * 2
+}
+
 func main() {
 	fmt.Println("Hola mundo")
 
@@ -81,4 +89,9 @@ func main() {
 	fmt.Printf("helloMessage: %T\n", helloMessage)
 	fmt.Printf("cursos: %T\n", cursos)
 
+	printString(1, 2, "parametro3")
+	var value1, value2 int = doubleReturn(2)
+	var value3, _ int = doubleReturn(6)
+
+	println(value1, value2, value3)
 }
