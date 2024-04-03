@@ -227,4 +227,23 @@ func main() {
 
 	fmt.Println() // salto de linea
 	isPalindromo("amor A Roma")
+
+	fmt.Println() // salto de linea
+	// Maps
+	m := make(map[string]int)
+
+	m["jose"] = 21
+	m["pepito"] = 14
+
+	fmt.Println(m) // map[jose:21 pepito:14]
+
+	for i, v := range m {
+		fmt.Println(i, v)
+	}
+
+	value, ok := m["jose"]
+	fmt.Println(value, ok)
+
+	value5, ok := m["josep"] // Esto no existe en el Map
+	fmt.Println(value5, ok)
 }
