@@ -163,4 +163,22 @@ func main() {
 	default:
 		fmt.Println("Value is between 0 and 100")
 	}
+
+	fmt.Println() // Salto de linea
+	defer fmt.Println("Primero")
+	fmt.Println("Segundo")
+
+	for i := 0; i < 10; i++ {
+		//continue
+		if i == 2 {
+			fmt.Println("llegue a 2")
+			continue
+		}
+		//break
+		if i == 8 {
+			fmt.Println("llegue a 8")
+			break
+		}
+		fmt.Println(i)
+	}
 }
