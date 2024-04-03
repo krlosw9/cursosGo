@@ -27,6 +27,11 @@ func (myPc *pc) duplicateRam() {
 	myPc.ram = myPc.ram * 2
 }
 
+// Hace algo parecido a toString en java, llamado Stringers y aplica a todos los fmt.Print()
+func (instancia pc) String() string {
+	return fmt.Sprintf("Tengo %d GB Ram, %d GB Disco y es una %s", instancia.ram, instancia.disk, instancia.brand)
+}
+
 func printString(param1, param2 int, param3 string) {
 	fmt.Println(param1, param2, param3)
 }
@@ -301,4 +306,6 @@ func main() {
 	fmt.Println(myPc)
 	myPc.duplicateRam()
 	fmt.Println(myPc)
+
+	//fmt.Printf("%+v", myPc) // imprime el struct tipo toString() sin sobreescribir
 }
