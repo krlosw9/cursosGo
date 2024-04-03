@@ -13,6 +13,20 @@ import (
 // 	year  int
 // }
 
+type pc struct {
+	ram   int
+	disk  int
+	brand string
+}
+
+func (myPc pc) ping() {
+	fmt.Println(myPc.brand, " pong")
+}
+
+func (myPc *pc) duplicateRam() {
+	myPc.ram = myPc.ram * 2
+}
+
 func printString(param1, param2 int, param3 string) {
 	fmt.Println(param1, param2, param3)
 }
@@ -270,4 +284,21 @@ func main() {
 	fmt.Println(myCar2)
 
 	mypackage.PrintMethod()
+
+	fmt.Println() // salto de linea
+	var f int = 50
+	var g = &f // Apunta directamente a la posicion en memoria de var f
+
+	fmt.Println("f:", f)
+	*g = 55 // Apunta al valor de var g que es un apuntador de var f
+	fmt.Println("f:", f)
+
+	myPc := pc{ram: 16, disk: 200, brand: "msi"}
+	fmt.Println(myPc)
+	myPc.ping()
+	fmt.Println(myPc)
+	myPc.duplicateRam()
+	fmt.Println(myPc)
+	myPc.duplicateRam()
+	fmt.Println(myPc)
 }
