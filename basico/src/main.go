@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+	"strconv"
+)
 
 func printString(param1, param2 int, param3 string) {
 	fmt.Println(param1, param2, param3)
@@ -117,4 +121,11 @@ func main() {
 	for i, par := range listaNumerosPares {
 		fmt.Printf("posicion %d número par: %d \n", i, par)
 	}
+
+	// Convertir texto a numero
+	value, err := strconv.Atoi("53")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Value: ", value)
 }
