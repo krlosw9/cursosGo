@@ -7,6 +7,11 @@ import (
 	"strings"
 )
 
+type Car struct {
+	brand string
+	year  int
+}
+
 func printString(param1, param2 int, param3 string) {
 	fmt.Println(param1, param2, param3)
 }
@@ -246,4 +251,13 @@ func main() {
 
 	value5, ok := m["josep"] // Esto no existe en el Map
 	fmt.Println(value5, ok)
+
+	fmt.Println() // salto de linea
+	fmt.Println("Class -> struct")
+	myCar := Car{brand: "Ford", year: 2024}
+	fmt.Println(myCar)
+	// Otra manera
+	var otherCar Car
+	otherCar.brand = "Ferrari"
+	fmt.Println(otherCar)
 }
