@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"strings"
 )
 
 func printString(param1, param2 int, param3 string) {
@@ -12,6 +13,22 @@ func printString(param1, param2 int, param3 string) {
 
 func doubleReturn(a int) (c, d int) {
 	return a, a * 2
+}
+
+func isPalindromo(text string) {
+	var reverseText string
+	text = strings.ToLower(text)
+
+	for i := len(text) - 1; i >= 0; i-- {
+		reverseText += string(text[i])
+	}
+
+	if text == reverseText {
+		fmt.Println("Es palindromo")
+	} else {
+		fmt.Println("No es palindromo")
+	}
+
 }
 
 func main() {
@@ -207,4 +224,7 @@ func main() {
 	newSlice := []int{8, 9, 10}
 	slice = append(slice, newSlice...)
 	fmt.Println(slice) // [0 1 2 3 4 5 6 7 8 9 10]
+
+	fmt.Println() // salto de linea
+	isPalindromo("amor A Roma")
 }
