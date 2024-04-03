@@ -94,4 +94,27 @@ func main() {
 	var value3, _ int = doubleReturn(6)
 
 	println(value1, value2, value3)
+
+	for i := 0; i < 10; i++ {
+		println(i)
+	}
+	fmt.Println()
+
+	counter := 0
+	for counter < 10 {
+		fmt.Println(counter)
+		counter++
+	}
+
+	// counterForEver := 0
+	// for {
+	// 	fmt.Println(counterForEver)
+	// 	counterForEver++
+	// }
+
+	// for range
+	listaNumerosPares := []int{2, 4, 6, 8, 10, 12, 14, 16, 18, 20}
+	for i, par := range listaNumerosPares {
+		fmt.Printf("posicion %d número par: %d \n", i, par)
+	}
 }
