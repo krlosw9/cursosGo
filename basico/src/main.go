@@ -3,14 +3,15 @@ package main
 import (
 	"fmt"
 	"log"
+	mypackage "platzi/basico/src/myPackage"
 	"strconv"
 	"strings"
 )
 
-type Car struct {
-	brand string
-	year  int
-}
+// type Car struct {
+// 	brand string
+// 	year  int
+// }
 
 func printString(param1, param2 int, param3 string) {
 	fmt.Println(param1, param2, param3)
@@ -252,12 +253,21 @@ func main() {
 	value5, ok := m["josep"] // Esto no existe en el Map
 	fmt.Println(value5, ok)
 
+	// fmt.Println() // salto de linea
+	// fmt.Println("Class -> struct")
+	// myCar := Car{brand: "Ford", year: 2024}
+	// fmt.Println(myCar)
+	// // Otra manera
+	// var otherCar Car
+	// otherCar.brand = "Ferrari"
+	// fmt.Println(otherCar)
+
 	fmt.Println() // salto de linea
-	fmt.Println("Class -> struct")
-	myCar := Car{brand: "Ford", year: 2024}
-	fmt.Println(myCar)
-	// Otra manera
-	var otherCar Car
-	otherCar.brand = "Ferrari"
-	fmt.Println(otherCar)
+	//Modificadores de acceso en funciones y structs
+	var myCar2 mypackage.CarPublic
+	myCar2.Brand = "Ferrari"
+	myCar2.Year = 2020
+	fmt.Println(myCar2)
+
+	mypackage.PrintMethod()
 }
