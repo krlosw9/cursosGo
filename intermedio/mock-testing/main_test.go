@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
 
 func TestGetFullTimeEmployeeById(t *testing.T) {
 	table := []struct {
@@ -53,8 +56,11 @@ func TestGetFullTimeEmployeeById(t *testing.T) {
 			t.Errorf("Error when getting Employee")
 		}
 
-		if ft.Age != test.expectedEmployee.Age {
-			t.Errorf("GetFullTimeEmployeeById was incorrect, got %d expected %d", ft.Age, test.expectedEmployee.Age)
+		// if ft.Age != test.expectedEmployee.Age {
+		// 	t.Errorf("GetFullTimeEmployeeById was incorrect, got %d expected %d", ft.Age, test.expectedEmployee.Age)
+		// }
+		if !reflect.DeepEqual(ft, test.expectedEmployee) {
+			t.Errorf("Not equal employees, \nExpected: %v\nGot: %v", ft, test.expectedEmployee)
 		}
 	}
 
