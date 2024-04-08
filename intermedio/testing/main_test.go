@@ -44,3 +44,40 @@ func TestMax(t *testing.T) {
 		}
 	}
 }
+
+func TestFibonacci(t *testing.T) {
+	tables := []struct {
+		a int
+		n int
+	}{
+		{1, 1},
+		{8, 21},
+		{50, 12586269025},
+	}
+
+	for _, item := range tables {
+		fib := Fibonacci(item.a)
+		if fib != item.n {
+			t.Errorf("Fibonacci was incorrect, got %d expected %d", fib, item.n)
+		}
+	}
+}
+
+// Esta es una forma super rapida de lograr Fibonacci
+func TestComputeOnceFibonacci(t *testing.T) {
+	tables := []struct {
+		a int
+		n int
+	}{
+		{1, 1},
+		{8, 21},
+		{50, 12586269025},
+	}
+
+	for _, item := range tables {
+		fib := ComputeOnceFibonacci(item.a)
+		if fib != item.n {
+			t.Errorf("ComputeOnceFibonacci was incorrect, got %d expected %d", fib, item.n)
+		}
+	}
+}
