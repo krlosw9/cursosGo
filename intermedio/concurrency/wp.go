@@ -3,8 +3,8 @@ package main
 import "fmt"
 
 func main() {
-	tasks := []int{2, 3, 4, 5, 7, 10, 12, 40}
-	nWorkers := 3
+	tasks := []int{2, 34, 36, 17, 10, 40, 6, 22, 41, 44, 33, 2, 5, 2, 34, 36, 17, 10, 40, 6, 22, 41, 44, 33, 2, 5, 17, 10, 40, 6, 22, 2, 5, 2, 34, 36, 22, 41, 44}
+	nWorkers := 5
 	jobs := make(chan int, len(tasks))
 	results := make(chan int, len(tasks))
 
