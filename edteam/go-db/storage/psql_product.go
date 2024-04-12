@@ -18,6 +18,7 @@ const (
 		CONSTRAINT products_id_pk PRIMARY KEY (id)
 	)`
 	psqlCreateProduct = `INSERT INTO products (name, observation, price, created_at) VALUES($1, $2, $3, $4) RETURNING id`
+	psqlGetAllProduct = `SELECT * FROM products`
 )
 
 // PsqlProduct used for work with postgres - product
@@ -66,4 +67,49 @@ func (p *PsqlProduct) Create(m *product.Model) error {
 
 	fmt.Println("Producto creado correctamente")
 	return nil
+}
+
+// GetAll implement the interface product.Storage
+func (p *PsqlProduct) GetAll() (product.Models, error) {
+	stmt, err := p.db.Prepare(psqlGetAllProduct)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+
+	rows, err := stmt.Query()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	ms := make(product.Models, 0)
+	for rows.Next() {
+		m := &product.Model{}
+
+		observationNull := sql.NullString{}
+		updatedAtNull := sql.NullTime{}
+
+		err := rows.Scan(
+			&m.ID,
+			&m.Name,
+			&observationNull,
+			&m.Price,
+			&m.CreatedAt,
+			&updatedAtNull,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		m.Observation = observationNull.String
+		m.UpdatedAt = updatedAtNull.Time
+		ms = append(ms, m)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return ms, nil
 }
