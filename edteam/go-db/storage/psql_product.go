@@ -24,6 +24,7 @@ const (
 	psqlCreateProduct  = `INSERT INTO products (name, observation, price, created_at) VALUES($1, $2, $3, $4) RETURNING id`
 	psqlGetAllProduct  = `SELECT * FROM products`
 	psqlGetProductByID = psqlGetAllProduct + " WHERE id = $1"
+	psqlUpdateProduct  = `UPDATE products SET name=$1, observation=$2, price=$3, updated_at=$4 WHERE id=$5`
 )
 
 // PsqlProduct used for work with postgres - product
@@ -137,4 +138,34 @@ func scanRowProduct(s scanner) (*product.Model, error) {
 	m.UpdatedAt = updatedAtNull.Time
 
 	return m, nil
+}
+
+func (p *PsqlProduct) Update(m *product.Model) error {
+	stmt, err := p.db.Prepare(psqlUpdateProduct)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	res, err := stmt.Exec(
+		m.Name,
+		stringToNull(m.Observation),
+		m.Price,
+		timeToNull(m.UpdatedAt),
+		m.ID,
+	)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return nil
+	}
+	if rowsAffected == 0 {
+		return fmt.Errorf("no existe producto con el id: %d", m.ID)
+	}
+
+	fmt.Printf("Producto actualizado correctamente %+v", m)
+	return nil
 }
