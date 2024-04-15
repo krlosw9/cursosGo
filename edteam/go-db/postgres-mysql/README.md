@@ -1,3 +1,5 @@
+Este proyecto es la práctica del [Curso: Bases de datos con Go](https://app.ed.team/cursos/database-go)
+
 ## Migrar tabla de productos
 
 ```go
