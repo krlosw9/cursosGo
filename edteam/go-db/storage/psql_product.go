@@ -25,6 +25,7 @@ const (
 	psqlGetAllProduct  = `SELECT * FROM products`
 	psqlGetProductByID = psqlGetAllProduct + " WHERE id = $1"
 	psqlUpdateProduct  = `UPDATE products SET name=$1, observation=$2, price=$3, updated_at=$4 WHERE id=$5`
+	psqlDeleteProduct  = `DELETE FROM products WHERE id = $1`
 )
 
 // PsqlProduct used for work with postgres - product
@@ -167,5 +168,28 @@ func (p *PsqlProduct) Update(m *product.Model) error {
 	}
 
 	fmt.Printf("Producto actualizado correctamente %+v", m)
+	return nil
+}
+
+func (p *PsqlProduct) Delete(id uint) error {
+	stmt, err := p.db.Prepare(psqlDeleteProduct)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	res, err := stmt.Exec(id)
+	if err != nil {
+		return err
+	}
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rowsAffected == 0 {
+		return fmt.Errorf("no existe producto con id %d", id)
+	}
+
+	fmt.Println("Producto eliminado correctamente")
 	return nil
 }
