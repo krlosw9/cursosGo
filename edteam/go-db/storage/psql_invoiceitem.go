@@ -3,6 +3,8 @@ package storage
 import (
 	"database/sql"
 	"fmt"
+
+	"github.com/krlosw9/cursosGo/go-db/pkg/invoiceitem"
 )
 
 const (
@@ -20,6 +22,7 @@ const (
 		(product_id) REFERENCES products (id)
 		ON UPDATE RESTRICT ON DELETE RESTRICT
 	)`
+	psqlCreateInvoiceItem = `INSERT INTO invoice_items (invoice_header_id, product_id) VALUES ($1, $2) RETURNING id, created_at`
 )
 
 type PsqlInvoiceItem struct {
@@ -44,5 +47,25 @@ func (p *PsqlInvoiceItem) Migrate() error {
 	}
 
 	fmt.Println("Migracion de invoice_items ejecutada correctamente")
+	return nil
+}
+
+func (p *PsqlInvoiceItem) CreateTx(tx *sql.Tx, headerId uint, ms invoiceitem.Models) error {
+	stmt, err := tx.Prepare(psqlCreateInvoiceItem)
+	if err != nil {
+		return nil
+	}
+	defer stmt.Close()
+
+	for _, item := range ms {
+		err = stmt.QueryRow(headerId, item.ProductID).Scan(
+			&item.ID,
+			&item.CreatedAt,
+		)
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }

@@ -9,7 +9,7 @@ import (
 type Model struct {
 	ID              uint
 	InvoiceHeaderID uint
-	productID       uint
+	ProductID       uint
 	CreatedAt       time.Time
 	UpdatedAt       time.Time
 }
@@ -32,4 +32,8 @@ func NewService(s Storage) *Service {
 
 func (s *Service) Migrate() error {
 	return s.storage.Migrate()
+}
+
+func (s *Service) CreateTx(tx *sql.Tx, headerId uint, m Models) error {
+	return s.storage.CreateTx(tx, headerId, m)
 }
