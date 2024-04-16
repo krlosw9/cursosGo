@@ -9,21 +9,13 @@ func main() {
 	driver := storage.MySQL
 	storage.New(driver)
 
-	// Borrado suave o logico
-	// myProduct := model.Product{}
-	// myProduct.ID = 2
+	invoice := model.InvoiceHeader{
+		Client: "Alvaro Felipe",
+		InvoiceItems: []model.InvoiceItem{
+			{ProductID: 1},
+			{ProductID: 2},
+		},
+	}
 
-	// storage.DB().Delete(&myProduct)
-	// ----------------------------------------------------
-	// products := make([]model.Product, 0)
-	// storage.DB().Find(&products)
-
-	// for _, product := range products {
-	// 	fmt.Printf("%d - %s\n", product.ID, product.Name)
-	// }
-	// ----------------------------------------------------
-	// Borrado permanente
-	myProduct := &model.Product{}
-	myProduct.ID = 3
-	storage.DB().Unscoped().Delete(myProduct)
+	storage.DB().Create(&invoice)
 }
