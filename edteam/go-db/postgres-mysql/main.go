@@ -1,36 +1,29 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
-	invoice "github.com/krlosw9/cursosGo/go-db/pkg/inovoice"
-	"github.com/krlosw9/cursosGo/go-db/pkg/invoiceheader"
-	"github.com/krlosw9/cursosGo/go-db/pkg/invoiceitem"
+	"github.com/krlosw9/cursosGo/go-db/pkg/product"
 	"github.com/krlosw9/cursosGo/go-db/storage"
 )
 
 func main() {
-	storage.NewPostgresDB()
+	driver := storage.Postgres
+	storage.New(driver)
 
-	storageHeader := storage.NewPsqlInvoiceHeader(storage.Pool())
-	storageItems := storage.NewPsqlInvoiceItem(storage.Pool())
-	storageInvoice := storage.NewPsqlInvoice(
-		storage.Pool(),
-		storageHeader,
-		storageItems,
-	)
-
-	m := &invoice.Model{
-		Header: &invoiceheader.Model{
-			Client: "Cliente error",
-		}, Items: invoiceitem.Models{
-			&invoiceitem.Model{ProductID: 2},
-			&invoiceitem.Model{ProductID: 99},
-		},
+	myStorage, err := storage.DAOProduct(driver)
+	if err != nil {
+		log.Fatalf("DAOProduct: %v", err)
 	}
 
-	serviceInvoice := invoice.NewService(storageInvoice)
-	if err := serviceInvoice.Create(m); err != nil {
-		log.Fatalf("invoice.Create: %v", err)
+	serviceProduct := product.NewService(myStorage)
+
+	ms, err := serviceProduct.GetAll()
+	if err != nil {
+		log.Fatalf("product.GetAll: %v", err)
 	}
+
+	fmt.Println(ms)
+
 }

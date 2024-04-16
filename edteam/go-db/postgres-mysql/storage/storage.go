@@ -8,6 +8,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/krlosw9/cursosGo/go-db/pkg/product"
 	_ "github.com/lib/pq"
 )
 
@@ -16,7 +17,29 @@ var (
 	once sync.Once
 )
 
-func NewPostgresDB() {
+// Driver of storage
+type Driver string
+
+// Drivers
+const (
+	MySQL    Driver = "MYSQL"
+	Postgres Driver = "POSTGRES"
+)
+
+// New create the connection with db
+func New(d Driver) {
+	switch d {
+	case MySQL:
+		fmt.Println("Esto iniciaria el driver de Mysql, pero no cree su implementacion...")
+		// NewMySQLDB()
+	case Postgres:
+		newPostgresDB()
+	default:
+		fmt.Println("Driver no configurado")
+	}
+}
+
+func newPostgresDB() {
 	once.Do(func() {
 		var err error
 		var user string = "krlos"
@@ -56,4 +79,14 @@ func timeToNull(t time.Time) sql.NullTime {
 		null.Valid = true
 	}
 	return null
+}
+
+// DAOProduct factory of product.Storage
+func DAOProduct(d Driver) (product.Storage, error) {
+	switch d {
+	case Postgres:
+		return newPsqlProduct(db), nil
+	default:
+		return nil, fmt.Errorf("Driver not implemented")
+	}
 }
