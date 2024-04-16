@@ -11,11 +11,8 @@ func main() {
 	driver := storage.Postgres
 	storage.New(driver)
 
-	products := make([]model.Product, 0)
-	storage.DB().Find(&products)
-
-	for _, product := range products {
-		fmt.Printf("%d - %s\n", product.ID, product.Name)
-	}
+	myProduct := model.Product{}
+	storage.DB().First(&myProduct, 3)
+	fmt.Println(myProduct)
 
 }
