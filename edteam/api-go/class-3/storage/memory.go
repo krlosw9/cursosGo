@@ -55,3 +55,21 @@ func (m *Memory) Delete(ID int) error {
 
 	return nil
 }
+
+func (m *Memory) GetByID(ID int) (model.Person, error) {
+	person, ok := m.Persons[ID]
+	if !ok {
+		return person, fmt.Errorf("ID: %d: %w", ID, model.ErrIDPersonDoesNotExist)
+	}
+
+	return person, nil
+}
+
+func (m *Memory) GetAll() (model.Persons, error) {
+	var result model.Persons
+	for _, v := range m.Persons {
+		result = append(result, v)
+	}
+
+	return result, nil
+}
