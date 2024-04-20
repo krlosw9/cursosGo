@@ -1,0 +1,1 @@
+Este proyecto es la práctica del [Curso: Creando APIs con Go](https://app.ed.team/cursos/api-go)
