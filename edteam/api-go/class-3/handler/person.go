@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -71,6 +72,34 @@ func (p *person) update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response := NewResponse(Message, "Persona actualizada correctamente", nil)
+	responseJson(w, http.StatusOK, response)
+}
+
+func (p *person) delete(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodDelete {
+		response := NewResponse(Error, "Método no permitido", nil)
+		responseJson(w, http.StatusMethodNotAllowed, response)
+		return
+	}
+
+	ID, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil {
+		response := NewResponse(Error, "El id debe ser un numero entero positivo", nil)
+		responseJson(w, http.StatusBadRequest, response)
+		return
+	}
+	err = p.storage.Delete(ID)
+	if errors.Is(err, model.ErrIDPersonDoesNotExist) {
+		response := NewResponse(Error, "El ID de la persona no existe", nil)
+		responseJson(w, http.StatusBadRequest, response)
+		return
+	}
+	if err != nil {
+		response := NewResponse(Error, "Hubo un problema al eliminar el registro la persona", nil)
+		responseJson(w, http.StatusInternalServerError, response)
+		return
+	}
+	response := NewResponse(Message, "Registro eliminado correctamente", nil)
 	responseJson(w, http.StatusOK, response)
 }
 
