@@ -8,6 +8,6 @@ func execute(name string, f func(string)) {
 
 func main() {
 	name := "Comunidad EDTeam"
-	execute(name, funciones.Saludar)
-	execute(name, funciones.Despedirse)
+	execute(name, funciones.MiddlewareLog(funciones.Saludar))
+	execute(name, funciones.MiddlewareLog(funciones.Despedirse))
 }
