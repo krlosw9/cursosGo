@@ -45,3 +45,31 @@ func (p *person) create(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(`{"message_type": "message", "message": "Persona creada correctamente"}`))
 
 }
+
+func (p *person) getAll(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		w.Header().Set("Content-Type", "aplication/json")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(`{"message_type": "error", "message": "Método no permitido"}`))
+		return
+	}
+
+	resp, err := p.storage.GetAll()
+	if err != nil {
+		w.Header().Set("Content-Type", "aplication/json")
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(`{"message_type": "error", "message": "Hubo un problema al obtener todas las personas"}`))
+		return
+	}
+
+	w.Header().Set("Content-Type", "aplication/json")
+	w.WriteHeader(http.StatusOK)
+	err = json.NewEncoder(w).Encode(&resp)
+	if err != nil {
+		w.Header().Set("Content-Type", "aplication/json")
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(`{"message_type": "error", "message": "Hubo un problema al convertir el slice a json"}`))
+		return
+	}
+
+}
