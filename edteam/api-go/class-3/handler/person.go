@@ -18,95 +18,76 @@ func newPerson(storage Storage) person {
 
 func (p *person) create(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		w.Header().Set("Content-Type", "aplication/json")
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(`{"message_type": "error", "message": "Método no permitido"}`))
+		response := NewResponse(Error, "Método no permitido", nil)
+		responseJson(w, http.StatusBadRequest, response)
 		return
 	}
 
 	data := model.Person{}
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
-		w.Header().Set("Content-Type", "aplication/json")
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(`{"message_type": "error", "message": "La persona no tiene una estructura correcta"}`))
+		response := NewResponse(Error, "La persona no tiene una estructura correcta", nil)
+		responseJson(w, http.StatusBadRequest, response)
 		return
 	}
 
 	err = p.storage.Create(&data)
 	if err != nil {
-		w.Header().Set("Content-Type", "aplication/json")
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(`{"message_type": "error", "message": "Hubo un problema al crear la persona"}`))
+		response := NewResponse(Error, "Hubo un problema al crear la persona", nil)
+		responseJson(w, http.StatusInternalServerError, response)
 		return
 	}
 
-	w.Header().Set("Content-Type", "aplication/json")
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte(`{"message_type": "message", "message": "Persona creada correctamente"}`))
+	response := NewResponse(Message, "Persona creada correctamente", nil)
+	responseJson(w, http.StatusCreated, response)
 
 }
 
 func (p *person) update(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPut {
-		w.Header().Set("Content-Type", "aplication/json")
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		w.Write([]byte(`{"message_type": "error", "message": "Método no permitido"}`))
+		response := NewResponse(Error, "Método no permitido", nil)
+		responseJson(w, http.StatusMethodNotAllowed, response)
 		return
 	}
 
 	ID, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil {
-		w.Header().Set("Content-Type", "aplication/json")
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(`{"message_type": "error", "message": "El id debe ser un numero entero positivo"}`))
+		response := NewResponse(Error, "El id debe ser un numero entero positivo", nil)
+		responseJson(w, http.StatusBadRequest, response)
 		return
 	}
 	data := model.Person{}
 	err = json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
-		w.Header().Set("Content-Type", "aplication/json")
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(`{"message_type": "error", "message": "La persona no tiene una estructura correcta"}`))
+		response := NewResponse(Error, "La persona no tiene una estructura correcta", nil)
+		responseJson(w, http.StatusBadRequest, response)
 		return
 	}
 	err = p.storage.Update(ID, &data)
 	if err != nil {
-		w.Header().Set("Content-Type", "aplication/json")
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(`{"message_type": "error", "message": "Hubo un problema al actualizar la persona"}`))
+		response := NewResponse(Error, "Hubo un problema al actualizar la persona", nil)
+		responseJson(w, http.StatusInternalServerError, response)
 		return
 	}
 
-	w.Header().Set("Content-Type", "aplication/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(`{"message_type": "message", "message": "Persona actualizada correctamente"}`))
+	response := NewResponse(Message, "Persona actualizada correctamente", nil)
+	responseJson(w, http.StatusOK, response)
 }
 
 func (p *person) getAll(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		w.Header().Set("Content-Type", "aplication/json")
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(`{"message_type": "error", "message": "Método no permitido"}`))
+		response := NewResponse(Error, "Método no permitido", nil)
+		responseJson(w, http.StatusBadRequest, response)
 		return
 	}
 
-	resp, err := p.storage.GetAll()
+	data, err := p.storage.GetAll()
 	if err != nil {
-		w.Header().Set("Content-Type", "aplication/json")
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(`{"message_type": "error", "message": "Hubo un problema al obtener todas las personas"}`))
+		response := NewResponse(Error, "Hubo un problema al obtener todas las personas", nil)
+		responseJson(w, http.StatusInternalServerError, response)
 		return
 	}
 
-	w.Header().Set("Content-Type", "aplication/json")
-	w.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(w).Encode(&resp)
-	if err != nil {
-		w.Header().Set("Content-Type", "aplication/json")
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(`{"message_type": "error", "message": "Hubo un problema al convertir el slice a json"}`))
-		return
-	}
-
+	response := NewResponse(Message, "Ok", data)
+	responseJson(w, http.StatusOK, response)
 }
