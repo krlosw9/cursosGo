@@ -1,5 +1,12 @@
 package handler
 
+import (
+	"net/http"
+
+	"github.com/krlosw9/cursosGo/api-go/class-7/model"
+	"github.com/labstack/echo/v4"
+)
+
 type person struct {
 	storage Storage
 }
@@ -8,32 +15,25 @@ func newPerson(storage Storage) person {
 	return person{storage}
 }
 
-// func (p *person) create(w http.ResponseWriter, r *http.Request) {
-// 	if r.Method != http.MethodPost {
-// 		response := NewResponse(Error, "Método no permitido", nil)
-// 		responseJson(w, http.StatusBadRequest, response)
-// 		return
-// 	}
+func (p *person) create(c echo.Context) error {
 
-// 	data := model.Person{}
-// 	err := json.NewDecoder(r.Body).Decode(&data)
-// 	if err != nil {
-// 		response := NewResponse(Error, "La persona no tiene una estructura correcta", nil)
-// 		responseJson(w, http.StatusBadRequest, response)
-// 		return
-// 	}
+	data := model.Person{}
+	err := c.Bind(&data)
+	if err != nil {
+		response := NewResponse(Error, "La persona no tiene una estructura correcta", nil)
+		return c.JSON(http.StatusBadRequest, response)
+	}
 
-// 	err = p.storage.Create(&data)
-// 	if err != nil {
-// 		response := NewResponse(Error, "Hubo un problema al crear la persona", nil)
-// 		responseJson(w, http.StatusInternalServerError, response)
-// 		return
-// 	}
+	err = p.storage.Create(&data)
+	if err != nil {
+		response := NewResponse(Error, "Hubo un problema al crear la persona", nil)
+		return c.JSON(http.StatusInternalServerError, response)
+	}
 
-// 	response := NewResponse(Message, "Persona creada correctamente", nil)
-// 	responseJson(w, http.StatusCreated, response)
+	response := NewResponse(Message, "Persona creada correctamente", nil)
+	return c.JSON(http.StatusCreated, response)
 
-// }
+}
 
 // func (p *person) update(w http.ResponseWriter, r *http.Request) {
 // 	if r.Method != http.MethodPut {

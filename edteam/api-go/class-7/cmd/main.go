@@ -20,8 +20,8 @@ func main() {
 
 	e := echo.New()
 
-	// handler.RoutePerson(e, &store)
 	handler.RouteLogin(e, &store)
+	handler.RoutePerson(e, &store)
 
 	log.Println("Servidor corriendo en http://127.0.0.1:8080/")
 	e.Logger.Fatal(e.Start(":8080"))
