@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/krlosw9/cursosGo/api-go/class-7/model"
 	"github.com/labstack/echo/v4"
@@ -15,6 +16,7 @@ func newPerson(storage Storage) person {
 	return person{storage}
 }
 
+// Create
 func (p *person) create(c echo.Context) error {
 
 	data := model.Person{}
@@ -35,36 +37,29 @@ func (p *person) create(c echo.Context) error {
 
 }
 
-// func (p *person) update(w http.ResponseWriter, r *http.Request) {
-// 	if r.Method != http.MethodPut {
-// 		response := NewResponse(Error, "Método no permitido", nil)
-// 		responseJson(w, http.StatusMethodNotAllowed, response)
-// 		return
-// 	}
+// update
+func (p *person) update(c echo.Context) error {
 
-// 	ID, err := strconv.Atoi(r.URL.Query().Get("id"))
-// 	if err != nil {
-// 		response := NewResponse(Error, "El id debe ser un numero entero positivo", nil)
-// 		responseJson(w, http.StatusBadRequest, response)
-// 		return
-// 	}
-// 	data := model.Person{}
-// 	err = json.NewDecoder(r.Body).Decode(&data)
-// 	if err != nil {
-// 		response := NewResponse(Error, "La persona no tiene una estructura correcta", nil)
-// 		responseJson(w, http.StatusBadRequest, response)
-// 		return
-// 	}
-// 	err = p.storage.Update(ID, &data)
-// 	if err != nil {
-// 		response := NewResponse(Error, "Hubo un problema al actualizar la persona", nil)
-// 		responseJson(w, http.StatusInternalServerError, response)
-// 		return
-// 	}
+	ID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		response := NewResponse(Error, "El id debe ser un numero entero positivo", nil)
+		return c.JSON(http.StatusBadRequest, response)
+	}
+	data := model.Person{}
+	err = c.Bind(&data)
+	if err != nil {
+		response := NewResponse(Error, "La persona no tiene una estructura correcta", nil)
+		return c.JSON(http.StatusBadRequest, response)
+	}
+	err = p.storage.Update(ID, &data)
+	if err != nil {
+		response := NewResponse(Error, "Hubo un problema al actualizar la persona", nil)
+		return c.JSON(http.StatusInternalServerError, response)
+	}
 
-// 	response := NewResponse(Message, "Persona actualizada correctamente", nil)
-// 	responseJson(w, http.StatusOK, response)
-// }
+	response := NewResponse(Message, "Persona actualizada correctamente", nil)
+	return c.JSON(http.StatusOK, response)
+}
 
 // func (p *person) delete(w http.ResponseWriter, r *http.Request) {
 // 	if r.Method != http.MethodDelete {
@@ -123,20 +118,15 @@ func (p *person) create(c echo.Context) error {
 // 	responseJson(w, http.StatusOK, response)
 // }
 
-// func (p *person) getAll(w http.ResponseWriter, r *http.Request) {
-// 	if r.Method != http.MethodGet {
-// 		response := NewResponse(Error, "Método no permitido", nil)
-// 		responseJson(w, http.StatusBadRequest, response)
-// 		return
-// 	}
+// getAll
+func (p *person) getAll(c echo.Context) error {
 
-// 	data, err := p.storage.GetAll()
-// 	if err != nil {
-// 		response := NewResponse(Error, "Hubo un problema al obtener todas las personas", nil)
-// 		responseJson(w, http.StatusInternalServerError, response)
-// 		return
-// 	}
+	data, err := p.storage.GetAll()
+	if err != nil {
+		response := NewResponse(Error, "Hubo un problema al obtener todas las personas", nil)
+		return c.JSON(http.StatusInternalServerError, response)
+	}
 
-// 	response := NewResponse(Message, "Ok", data)
-// 	responseJson(w, http.StatusOK, response)
-// }
+	response := NewResponse(Message, "Ok", data)
+	return c.JSON(http.StatusOK, response)
+}

@@ -11,8 +11,8 @@ func RoutePerson(e *echo.Echo, storage Storage) {
 	person.Use(middleware.Authentication)
 
 	person.POST("", h.create)
-	// mux.HandleFunc("/v1/persons/update", h.update)
-	// mux.HandleFunc("/v1/persons/get-all", middleware.Log(h.getAll))
+	person.PUT("/:id", h.update)
+	person.GET("", h.getAll)
 	// mux.HandleFunc("/v1/persons/delete", middleware.Log(h.delete))
 	// mux.HandleFunc("/v1/persons/get", h.getByID)
 }
