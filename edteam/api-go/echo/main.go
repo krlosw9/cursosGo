@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 
@@ -16,6 +17,7 @@ func main() {
 	e.GET("/dividir", dividir)
 
 	handlerPersons := e.Group("/persons")
+	handlerPersons.Use(middlewarePersonLog)
 	handlerPersons.GET("/:id", getPersons)
 	handlerPersons.POST("", create)
 	handlerPersons.PUT("/:id", update)
@@ -53,4 +55,11 @@ func update(c echo.Context) error {
 func delete(c echo.Context) error {
 	id := c.Param("id")
 	return c.JSON(http.StatusOK, map[string]string{"message": "Eliminado id: " + id})
+}
+
+func middlewarePersonLog(f echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		log.Println("Peticion hecha a /person, logueado desde middlewarePersonLog")
+		return f(c)
+	}
 }
