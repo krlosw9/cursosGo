@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/krlosw9/cursosGo/api-go/class-3/authorization"
+	"github.com/krlosw9/cursosGo/api-go/class-7/authorization"
 )
 
 func Log(f func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request) {

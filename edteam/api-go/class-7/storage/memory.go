@@ -3,7 +3,7 @@ package storage
 import (
 	"fmt"
 
-	"github.com/krlosw9/cursosGo/api-go/class-3/model"
+	"github.com/krlosw9/cursosGo/api-go/class-7/model"
 )
 
 // Memory

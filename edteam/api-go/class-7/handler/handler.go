@@ -1,6 +1,6 @@
 package handler
 
-import "github.com/krlosw9/cursosGo/api-go/class-3/model"
+import "github.com/krlosw9/cursosGo/api-go/class-7/model"
 
 type Storage interface {
 	Create(person *model.Person) error

@@ -2,11 +2,12 @@ package main
 
 import (
 	"log"
-	"net/http"
 
-	"github.com/krlosw9/cursosGo/api-go/class-3/authorization"
-	"github.com/krlosw9/cursosGo/api-go/class-3/handler"
-	"github.com/krlosw9/cursosGo/api-go/class-3/storage"
+	"github.com/labstack/echo/v4"
+
+	"github.com/krlosw9/cursosGo/api-go/class-7/authorization"
+	"github.com/krlosw9/cursosGo/api-go/class-7/handler"
+	"github.com/krlosw9/cursosGo/api-go/class-7/storage"
 )
 
 func main() {
@@ -16,14 +17,12 @@ func main() {
 	}
 
 	store := storage.NewMemory()
-	mux := http.NewServeMux()
 
-	handler.RoutePerson(mux, &store)
-	handler.RouteLogin(mux, &store)
+	e := echo.New()
+
+	// handler.RoutePerson(e, &store)
+	handler.RouteLogin(e, &store)
 
 	log.Println("Servidor corriendo en http://127.0.0.1:8080/")
-	err = http.ListenAndServe(":8080", mux)
-	if err != nil {
-		log.Printf("Error en el servidor: %v\n", err)
-	}
+	e.Logger.Fatal(e.Start(":8080"))
 }

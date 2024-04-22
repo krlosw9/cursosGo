@@ -1,11 +1,11 @@
 package handler
 
 import (
-	"encoding/json"
 	"net/http"
 
-	"github.com/krlosw9/cursosGo/api-go/class-3/authorization"
-	"github.com/krlosw9/cursosGo/api-go/class-3/model"
+	"github.com/krlosw9/cursosGo/api-go/class-7/authorization"
+	"github.com/krlosw9/cursosGo/api-go/class-7/model"
+	"github.com/labstack/echo/v4"
 )
 
 type login struct {
@@ -16,36 +16,28 @@ func newLogin(s Storage) login {
 	return login{s}
 }
 
-func (l *login) login(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		response := NewResponse(Error, "Método no permitido", nil)
-		responseJson(w, http.StatusMethodNotAllowed, response)
-		return
-	}
+func (l *login) login(c echo.Context) error {
 
 	data := model.Login{}
-	err := json.NewDecoder(r.Body).Decode(&data)
+	err := c.Bind(&data)
 	if err != nil {
 		resp := NewResponse(Error, "estructura no valida", nil)
-		responseJson(w, http.StatusBadRequest, resp)
-		return
+		return c.JSON(http.StatusBadRequest, resp)
 	}
 	if !isLoginValid(&data) {
 		resp := NewResponse(Error, "usuario o contraseña no validos", nil)
-		responseJson(w, http.StatusBadRequest, resp)
-		return
+		return c.JSON(http.StatusBadRequest, resp)
 	}
 
 	token, err := authorization.GenerateToken(&data)
 	if err != nil {
 		resp := NewResponse(Error, "No se pudo generar el token", nil)
-		responseJson(w, http.StatusInternalServerError, resp)
-		return
+		return c.JSON(http.StatusInternalServerError, resp)
 	}
 
 	dataToken := map[string]string{"token": token}
 	resp := NewResponse(Message, "Ok", dataToken)
-	responseJson(w, http.StatusOK, resp)
+	return c.JSON(http.StatusOK, resp)
 }
 
 func isLoginValid(data *model.Login) bool {

@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/krlosw9/cursosGo/api-go/class-3/model"
+	"github.com/krlosw9/cursosGo/api-go/class-7/model"
 )
 
 func GenerateToken(data *model.Login) (string, error) {
