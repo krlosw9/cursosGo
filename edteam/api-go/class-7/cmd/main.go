@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"log"
 	"os"
 
@@ -28,8 +27,7 @@ func main() {
 	defer logFile.Close()
 
 	// Configurar el logger para que escriba en el archivo
-	mw := io.MultiWriter(os.Stdout, logFile)
-	logger := log.New(mw, "", log.Ldate|log.Ltime|log.Lshortfile)
+	logger := log.New(logFile, "", log.Ldate|log.Ltime|log.Lshortfile)
 
 	// Configurar y lanzar el servidor Echo
 	if err := runServer(logger); err != nil {
@@ -57,17 +55,13 @@ func configureServer(logger *log.Logger) (*echo.Echo, storage.Memory) {
 	e := echo.New()
 
 	e.Use(middleware.Recover())
-	// Middleware para registrar todas las solicitudes
-	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
-		Output: logger.Writer(),
-	}))
 
 	// Middleware para manejar excepciones no capturadas
 	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			defer func() {
 				if r := recover(); r != nil {
-					errMsg := fmt.Sprintf("Panic: %v", r)
+					errMsg := fmt.Sprintf("Panic: %v, Endpoint: %s", r, c.Path())
 					logger.Println(errMsg)
 					c.Error(fmt.Errorf(errMsg))
 				}
