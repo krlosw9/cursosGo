@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 
 	"github.com/krlosw9/cursosGo/api-go/class-7/authorization"
 	"github.com/krlosw9/cursosGo/api-go/class-7/handler"
@@ -19,6 +20,8 @@ func main() {
 	store := storage.NewMemory()
 
 	e := echo.New()
+	e.Use(middleware.Recover())
+	e.Use(middleware.Logger())
 
 	handler.RouteLogin(e, &store)
 	handler.RoutePerson(e, &store)
