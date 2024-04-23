@@ -59,7 +59,6 @@ func configureServer(logger *log.Logger) (*echo.Echo, storage.Memory) {
 	e.Use(middleware.Recover())
 	// Middleware para registrar todas las solicitudes
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
-		Format: "method=${method}, uri=${uri}, status=${status}\n",
 		Output: logger.Writer(),
 	}))
 
