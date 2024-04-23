@@ -12,9 +12,9 @@ func RoutePerson(e *echo.Echo, storage Storage) {
 
 	person.POST("", h.create)
 	person.PUT("/:id", h.update)
+	person.DELETE("/:id", h.delete)
+	person.GET("/:id", h.getByID)
 	person.GET("", h.getAll)
-	// mux.HandleFunc("/v1/persons/delete", middleware.Log(h.delete))
-	// mux.HandleFunc("/v1/persons/get", h.getByID)
 }
 
 func RouteLogin(e *echo.Echo, storage Storage) {
