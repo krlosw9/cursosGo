@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -9,7 +10,8 @@ import (
 const url = "http://localhost:8080"
 
 func main() {
-	loginCient(url+"/v1/login", "krlosw9@gmail.com", "123456")
+	lc := loginClient(url+"/v1/login", "krlosw9@gmail.com", "123456")
+	fmt.Println(lc)
 }
 
 func httpClient(method, url string, body io.Reader) *http.Response {

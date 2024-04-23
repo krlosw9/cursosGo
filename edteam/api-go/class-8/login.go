@@ -3,13 +3,12 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 )
 
-func loginCient(url, email, password string) {
+func loginClient(url, email, password string) LoginResponse {
 	login := Login{
 		Email:    email,
 		Password: password,
@@ -32,5 +31,11 @@ func loginCient(url, email, password string) {
 		log.Fatalf("Se esperaba codigo 200, se obtuvo: %d, respuesta: %s", resp.StatusCode, string(body))
 	}
 
-	fmt.Println(string(body))
+	dataResponse := LoginResponse{}
+	err = json.NewDecoder(bytes.NewReader(body)).Decode(&dataResponse)
+	if err != nil {
+		log.Fatalf("Error en unmarshal del body en login: %v", err)
+	}
+
+	return dataResponse
 }
